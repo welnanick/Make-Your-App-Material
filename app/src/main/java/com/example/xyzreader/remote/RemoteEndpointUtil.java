@@ -23,7 +23,7 @@ public class RemoteEndpointUtil {
 
     public static JSONArray fetchJsonArray() {
 
-        String itemsJson = null;
+        String itemsJson;
         try {
 
             itemsJson = fetchPlainText(Config.BASE_URL);
@@ -58,7 +58,7 @@ public class RemoteEndpointUtil {
 
     }
 
-    static String fetchPlainText(URL url) throws IOException {
+    private static String fetchPlainText(URL url) throws IOException {
 
         OkHttpClient client = new OkHttpClient();
 

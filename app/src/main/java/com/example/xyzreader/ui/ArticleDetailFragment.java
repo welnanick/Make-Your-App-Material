@@ -1,9 +1,6 @@
 package com.example.xyzreader.ui;
 
-import android.app.Fragment;
-import android.app.LoaderManager;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -11,7 +8,11 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.content.Loader;
 import android.support.v7.graphics.Palette;
 import android.text.Html;
 import android.text.format.DateUtils;
@@ -42,7 +43,7 @@ public class ArticleDetailFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "ArticleDetailFragment";
-    public static final String ARG_ITEM_ID = "item_id";
+    private static final String ARG_ITEM_ID = "item_id";
     private static final float PARALLAX_FACTOR = 1.25f;
     private Cursor mCursor;
     private long mItemId;
@@ -57,11 +58,11 @@ public class ArticleDetailFragment extends Fragment
     private int mScrollY;
     private boolean mIsCard = false;
     private int mStatusBarFullOpacityBottom;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Use default locale format
-    private SimpleDateFormat outputFormat = new SimpleDateFormat();
+    private final SimpleDateFormat outputFormat = new SimpleDateFormat();
     // Most time functions can only handle 1902 - 2037
-    private GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2, 1, 1);
+    private final GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2, 1, 1);
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -99,7 +100,7 @@ public class ArticleDetailFragment extends Fragment
 
     }
 
-    public ArticleDetailActivity getActivityCast() {
+    private ArticleDetailActivity getActivityCast() {
 
         return (ArticleDetailActivity) getActivity();
 
@@ -119,7 +120,7 @@ public class ArticleDetailFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
@@ -191,13 +192,13 @@ public class ArticleDetailFragment extends Fragment
 
     }
 
-    static float progress(float v, float min, float max) {
+    private static float progress(float v, float min, float max) {
 
         return constrain((v - min) / (max - min), 0, 1);
 
     }
 
-    static float constrain(float val, float min, float max) {
+    private static float constrain(float val, float min, float max) {
 
         if (val < min) {
 
@@ -290,7 +291,7 @@ public class ArticleDetailFragment extends Fragment
                                              Bitmap bitmap = imageContainer.getBitmap();
                                              if (bitmap != null) {
 
-                                                 Palette p = Palette.generate(bitmap, 12);
+                                                 Palette p = new Palette.Builder(bitmap).maximumColorCount(12).generate();
                                                  mMutedColor = p.getDarkMutedColor(0xFF333333);
                                                  mPhotoView.setImageBitmap(
                                                          imageContainer.getBitmap());
@@ -321,6 +322,7 @@ public class ArticleDetailFragment extends Fragment
 
     }
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 
@@ -329,7 +331,7 @@ public class ArticleDetailFragment extends Fragment
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+    public void onLoadFinished(@NonNull Loader<Cursor> cursorLoader, Cursor cursor) {
 
         if (!isAdded()) {
 
@@ -356,7 +358,7 @@ public class ArticleDetailFragment extends Fragment
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> cursorLoader) {
 
         mCursor = null;
         bindViews();

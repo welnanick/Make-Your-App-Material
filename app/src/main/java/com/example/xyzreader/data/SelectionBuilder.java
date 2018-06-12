@@ -28,6 +28,7 @@ import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -98,11 +99,7 @@ public class SelectionBuilder {
         if (selectionArgs != null) {
 
             ensureSelectionArgs();
-            for (String arg : selectionArgs) {
-
-                mSelectionArgs.add(arg);
-
-            }
+            Collections.addAll(mSelectionArgs, selectionArgs);
 
         }
 
@@ -178,7 +175,7 @@ public class SelectionBuilder {
      *
      * @see #getSelectionArgs()
      */
-    public String getSelection() {
+    private String getSelection() {
 
         if (mSelection != null) {
 
@@ -198,7 +195,7 @@ public class SelectionBuilder {
      *
      * @see #getSelection()
      */
-    public String[] getSelectionArgs() {
+    private String[] getSelectionArgs() {
 
         if (mSelectionArgs != null) {
 
@@ -253,8 +250,8 @@ public class SelectionBuilder {
     /**
      * Execute query using the current internal state as {@code WHERE} clause.
      */
-    public Cursor query(SQLiteDatabase db, String[] columns, String groupBy, String having,
-                        String orderBy, String limit) {
+    private Cursor query(SQLiteDatabase db, String[] columns, String groupBy, String having,
+                         String orderBy, String limit) {
 
         assertTable();
         if (columns != null) {
