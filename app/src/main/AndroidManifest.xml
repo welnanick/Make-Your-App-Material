@@ -10,7 +10,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Bacon">
+        android:theme="@style/Theme.Article">
 
         <activity
             android:name=".ui.ArticleListActivity"
@@ -34,10 +34,12 @@
                 android:value=".ui.ArticleListActivity" />
         </activity>
 
-        <service android:name=".data.UpdaterService"
+        <service
+            android:name=".data.UpdaterService"
             android:exported="false" />
 
-        <provider android:name=".data.ItemsProvider"
+        <provider
+            android:name=".data.ItemsProvider"
             android:authorities="com.example.xyzreader"
             android:exported="false" />
 

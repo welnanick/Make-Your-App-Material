@@ -67,8 +67,8 @@ public class ItemsProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs,
-                        String sortOrder) {
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection,
+                        String[] selectionArgs, String sortOrder) {
 
         final SQLiteDatabase db = mOpenHelper.getReadableDatabase();
         final SelectionBuilder builder = buildSelection(uri);
@@ -102,7 +102,8 @@ public class ItemsProvider extends ContentProvider {
     }
 
     @Override
-    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues values, String selection,
+                      String[] selectionArgs) {
 
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final SelectionBuilder builder = buildSelection(uri);
@@ -154,7 +155,8 @@ public class ItemsProvider extends ContentProvider {
      * any single one fails.
      */
     @NonNull
-    public ContentProviderResult[] applyBatch(@NonNull ArrayList<ContentProviderOperation> operations)
+    public ContentProviderResult[] applyBatch(
+            @NonNull ArrayList<ContentProviderOperation> operations)
             throws OperationApplicationException {
 
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();

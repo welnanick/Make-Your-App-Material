@@ -11,17 +11,20 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.Html;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
+import com.example.xyzreader.data.ArticleLoader.Query;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
 
@@ -124,12 +127,10 @@ public class ArticleListActivity extends AppCompatActivity
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> cursorLoader, Cursor cursor) {
 
-        Adapter adapter = new Adapter(cursor);
+        Adapter adapter = new Adapter(cursor, this);
         adapter.setHasStableIds(true);
         mRecyclerView.setAdapter(adapter);
-        int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm =
-                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        LinearLayoutManager sglm = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(sglm);
 
     }
@@ -144,10 +145,12 @@ public class ArticleListActivity extends AppCompatActivity
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
 
         private final Cursor mCursor;
+        private Context context;
 
-        Adapter(Cursor cursor) {
+        Adapter(Cursor cursor, Context context) {
 
             mCursor = cursor;
+            this.context = context;
 
         }
 
@@ -206,23 +209,21 @@ public class ArticleListActivity extends AppCompatActivity
             Date publishedDate = parsePublishedDate();
             if (!publishedDate.before(START_OF_EPOCH.getTime())) {
 
-                holder.subtitleView.setText(Html.fromHtml(DateUtils
+                holder.subtitleView.setText(DateUtils
                         .getRelativeTimeSpanString(publishedDate.getTime(),
                                 System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
-                                DateUtils.FORMAT_ABBREV_ALL).toString() + "<br/>" + " by " +
-                        mCursor.getString(ArticleLoader.Query.AUTHOR)));
+                                DateUtils.FORMAT_ABBREV_ALL).toString() + "\n by " +
+                        mCursor.getString(ArticleLoader.Query.AUTHOR));
 
             }
             else {
 
-                holder.subtitleView.setText(Html.fromHtml(
-                        outputFormat.format(publishedDate) + "<br/>" + " by " +
-                                mCursor.getString(ArticleLoader.Query.AUTHOR)));
+                holder.subtitleView.setText(outputFormat.format(publishedDate) + "\n by " +
+                        mCursor.getString(ArticleLoader.Query.AUTHOR));
 
             }
-            holder.thumbnailView.setImageUrl(mCursor.getString(ArticleLoader.Query.THUMB_URL),
-                    ImageLoaderHelper.getInstance(ArticleListActivity.this).getImageLoader());
-            holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
+            Glide.with(context).load(mCursor.getString(Query.PHOTO_URL))
+                 .transition(DrawableTransitionOptions.withCrossFade()).into(holder.thumbnailView);
 
         }
 
@@ -237,7 +238,7 @@ public class ArticleListActivity extends AppCompatActivity
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        final DynamicHeightNetworkImageView thumbnailView;
+        final ImageView thumbnailView;
         final TextView titleView;
         final TextView subtitleView;
 
