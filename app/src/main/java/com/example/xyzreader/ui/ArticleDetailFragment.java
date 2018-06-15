@@ -63,7 +63,7 @@ public class ArticleDetailFragment extends Fragment
 
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
+        if (getArguments() != null && getArguments().containsKey(ARG_ITEM_ID)) {
 
             mItemId = getArguments().getLong(ARG_ITEM_ID);
 
@@ -126,17 +126,19 @@ public class ArticleDetailFragment extends Fragment
             Date publishedDate = parsePublishedDate();
             if (!publishedDate.before(START_OF_EPOCH.getTime())) {
 
-                bylineView.setText(DateUtils.getRelativeTimeSpanString(publishedDate.getTime(),
-                        System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
-                        DateUtils.FORMAT_ABBREV_ALL).toString() + " by " +
-                        mCursor.getString(ArticleLoader.Query.AUTHOR));
+                bylineView.setText(getString(R.string.byline_placeholder, DateUtils
+                                .getRelativeTimeSpanString(publishedDate.getTime(),
+                                        System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
+                                        DateUtils.FORMAT_ABBREV_ALL).toString(),
+                        mCursor.getString(ArticleLoader.Query.AUTHOR)));
 
             }
             else {
 
                 // If date is before 1902, just show the string
-                bylineView.setText(outputFormat.format(publishedDate) + " by " +
-                        mCursor.getString(ArticleLoader.Query.AUTHOR));
+                bylineView.setText(
+                        getString(R.string.byline_placeholder, outputFormat.format(publishedDate),
+                                mCursor.getString(ArticleLoader.Query.AUTHOR)));
 
             }
             String bodyText =

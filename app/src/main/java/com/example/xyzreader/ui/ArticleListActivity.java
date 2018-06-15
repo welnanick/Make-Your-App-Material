@@ -145,7 +145,7 @@ public class ArticleListActivity extends AppCompatActivity
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
 
         private final Cursor mCursor;
-        private Context context;
+        private final Context context;
 
         Adapter(Cursor cursor, Context context) {
 
@@ -209,17 +209,18 @@ public class ArticleListActivity extends AppCompatActivity
             Date publishedDate = parsePublishedDate();
             if (!publishedDate.before(START_OF_EPOCH.getTime())) {
 
-                holder.subtitleView.setText(DateUtils
-                        .getRelativeTimeSpanString(publishedDate.getTime(),
+                holder.subtitleView.setText(getString(R.string.byline_placeholder_linebreak,
+                        DateUtils.getRelativeTimeSpanString(publishedDate.getTime(),
                                 System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
-                                DateUtils.FORMAT_ABBREV_ALL).toString() + "\n by " +
-                        mCursor.getString(ArticleLoader.Query.AUTHOR));
+                                DateUtils.FORMAT_ABBREV_ALL).toString(),
+                        mCursor.getString(ArticleLoader.Query.AUTHOR)));
 
             }
             else {
 
-                holder.subtitleView.setText(outputFormat.format(publishedDate) + "\n by " +
-                        mCursor.getString(ArticleLoader.Query.AUTHOR));
+                holder.subtitleView.setText(getString(R.string.byline_placeholder_linebreak,
+                        outputFormat.format(publishedDate),
+                        mCursor.getString(ArticleLoader.Query.AUTHOR)));
 
             }
             Glide.with(context).load(mCursor.getString(Query.PHOTO_URL))

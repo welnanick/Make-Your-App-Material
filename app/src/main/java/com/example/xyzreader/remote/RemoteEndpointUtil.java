@@ -65,7 +65,14 @@ public class RemoteEndpointUtil {
         Request request = new Request.Builder().url(url).build();
 
         Response response = client.newCall(request).execute();
-        return response.body().string();
+        if (response.body() != null) {
+            return response.body().string();
+        }
+        else {
+
+            return null;
+
+        }
 
     }
 

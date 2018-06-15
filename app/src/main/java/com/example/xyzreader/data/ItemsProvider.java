@@ -75,7 +75,11 @@ public class ItemsProvider extends ContentProvider {
         Cursor cursor = builder.where(selection, selectionArgs).query(db, projection, sortOrder);
         if (cursor != null) {
 
-            cursor.setNotificationUri(getContext().getContentResolver(), uri);
+            if (getContext() != null) {
+
+                cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+            }
 
         }
         return cursor;
@@ -91,7 +95,11 @@ public class ItemsProvider extends ContentProvider {
 
             case ITEMS:
                 final long _id = db.insertOrThrow(Tables.ITEMS, null, values);
-                getContext().getContentResolver().notifyChange(uri, null);
+                if (getContext() != null) {
+
+                    getContext().getContentResolver().notifyChange(uri, null);
+
+                }
                 return ItemsContract.Items.buildItemUri(_id);
 
             default:
@@ -107,7 +115,11 @@ public class ItemsProvider extends ContentProvider {
 
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final SelectionBuilder builder = buildSelection(uri);
-        getContext().getContentResolver().notifyChange(uri, null);
+        if (getContext() != null) {
+
+            getContext().getContentResolver().notifyChange(uri, null);
+
+        }
         return builder.where(selection, selectionArgs).update(db, values);
 
     }
@@ -117,7 +129,11 @@ public class ItemsProvider extends ContentProvider {
 
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final SelectionBuilder builder = buildSelection(uri);
-        getContext().getContentResolver().notifyChange(uri, null);
+        if (getContext() != null) {
+
+            getContext().getContentResolver().notifyChange(uri, null);
+
+        }
         return builder.where(selection, selectionArgs).delete(db);
 
     }
