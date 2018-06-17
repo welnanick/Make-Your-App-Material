@@ -13,8 +13,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:background="?colorPrimary"
-            android:elevation="4dp">
+            android:elevation="4dp"
+            app:layout_scrollFlags="scroll">
 
             <ImageView
                 android:id="@+id/logo"
@@ -39,6 +39,8 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:paddingBottom="28dp"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
             android:paddingTop="8dp"
             android:scrollbarStyle="outsideOverlay" />
 

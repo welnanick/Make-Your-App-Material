@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -119,7 +121,7 @@ public class ArticleDetailFragment extends Fragment
 
         TextView titleView = mRootView.findViewById(R.id.article_title);
         TextView bylineView = mRootView.findViewById(R.id.article_byline);
-        TextView bodyView = mRootView.findViewById(R.id.article_body);
+        RecyclerView bodyView = mRootView.findViewById(R.id.body_recycler_view);
 
         if (mCursor != null) {
             titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
@@ -145,7 +147,11 @@ public class ArticleDetailFragment extends Fragment
                     mCursor.getString(ArticleLoader.Query.BODY).replace("\r\n\r\n", "\n\n");
             bodyText = bodyText.replace("\r\n    ", "\n    ");
             bodyText = bodyText.replace("\r\n", " ");
-            bodyView.setText(bodyText);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            bodyView.setLayoutManager(layoutManager);
+            String[] text = bodyText.split("\n\n");
+            BodyAdapter adapter = new BodyAdapter(text);
+            bodyView.setAdapter(adapter);
             mRootView.findViewById(R.id.scrollview).setVisibility(View.VISIBLE);
             mRootView.findViewById(R.id.progress_bar).setVisibility(View.GONE);
 
@@ -198,6 +204,53 @@ public class ArticleDetailFragment extends Fragment
 
         mCursor = null;
         bindViews();
+
+    }
+
+    private class BodyAdapter extends RecyclerView.Adapter<ViewHolder> {
+
+        private String[] text;
+
+        BodyAdapter(String[] text) {
+
+            this.text = text;
+
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+            View view = getLayoutInflater().inflate(R.layout.list_item_body_text, parent, false);
+            return new ViewHolder(view);
+
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+            holder.body.setText(text[position]);
+        }
+
+        @Override
+        public int getItemCount() {
+
+            return text.length;
+
+        }
+
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        final TextView body;
+
+        ViewHolder(View view) {
+
+            super(view);
+            body = view.findViewById(R.id.body_text);
+
+        }
 
     }
 
